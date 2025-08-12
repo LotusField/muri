@@ -8,11 +8,11 @@ This program is design for architects and engineers to simulate static 3D diffus
 ## The development project
 The project would have 4 main code directory:
 - pre-processor
--   receives input from the user and create arguments for the solver
--   allows to save the input
+  - receives input from the user and create arguments for the solver
+  - allows to save the input
 - solver
--   uses the arguments created by the pre-processor
+  - uses the arguments created by the pre-processor
 - post-processor
--   allows to print, display and save the results
+  - allows to print, display and save the results
 - gui
--   graphical interface for the pre-processor, solver and post-processor
+  - graphical interface for the pre-processor, solver and post-processor
