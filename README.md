@@ -16,3 +16,7 @@ The project would have 4 main code directory:
   - allows to print, display and save the results
 - gui
   - graphical interface for the pre-processor, solver and post-processor
+
+### Used libraries and tools
+- Compilation commands: **CMake**
+- Windows and graphics: **Qt** and **OpenGL**
