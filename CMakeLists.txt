@@ -8,14 +8,25 @@ qt_standard_project_setup()
 # specify that there is anexecutable and required sources
 qt_add_executable(muri
     WIN32 MACOSX_BUNDLE
+
     main.cpp
-    src/mainwindow.cpp
+
+    include/gvar.h
+
     include/mainwindow.h
+    src/mainwindow.cpp
+
     src/mainwindow.ui
+
+    preprocessor/include/grid.h
+    preprocessor/src/grid.cpp
 )
 
 # define where the headers are
-target_include_directories(muri PUBLIC include)
+target_include_directories(muri PUBLIC
+    include
+    preprocessor/include
+)
 
 target_link_libraries(muri
     PRIVATE
