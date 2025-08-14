@@ -11,9 +11,9 @@ public:
     Grid();
 
     // Convert indices along the different dimension to the absolute coordinates
-    std::array<double, g_ndim> coords(const std::array<std::size_t, g_ndim>& vec, const std::array<std::vector<double>, g_ndim>& gridcoords);
+    std::array<double, g_ndim> coords(const std::array<std::size_t, g_ndim>& vec, const std::array<std::vector<double>, g_ndim>& gridcoords) const;
 
-    std::array<std::vector<double>,g_ndim> getGridcoords();
+    std::array<std::vector<double>,g_ndim> getGridcoords() const;
 
 private:
 
