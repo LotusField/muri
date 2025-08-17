@@ -1,8 +1,21 @@
 cmake_minimum_required(VERSION 3.19)
 project(muri LANGUAGES CXX VERSION 0.0.1)
+set(CMAKE_CXX_STANDARD 11)
 
 find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
-find_package (Eigen3 3.4 REQUIRED NO_MODULE) #
+find_package(Eigen3 3.4 REQUIRED NO_MODULE)
+
+include(FetchContent)
+
+#
+FetchContent_Declare(
+  catch2
+  GIT_REPOSITORY https://github.com/catchorg/Catch2
+  GIT_TAG v3.9.1  # Change as needed
+)
+
+FetchContent_MakeAvailable(catch2)
+#
 
 qt_standard_project_setup()
 
@@ -23,19 +36,33 @@ qt_add_executable(${PROJECT_NAME}
     preprocessor/src/grid.cpp
 )
 
+qt_add_executable(tests
+    preprocessor/include/grid.h
+    preprocessor/src/grid.cpp
+    preprocessor/tests/grid_test.cpp
+)
+
 # define where the headers are
 target_include_directories(${PROJECT_NAME} PUBLIC
     include
     preprocessor/include
-    "eigen-3.4.0"
+    eigen-3.4.0
+)
+
+target_include_directories(tests PUBLIC
+    include
+    preprocessor/include
+    eigen-3.4.0
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         Qt::Core
         Qt::Widgets
-        ${Eigen_LIBRARIES} #
+        ${Eigen_LIBRARIES}#
 )
+
+target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
 
 include(GNUInstallDirs)
 

@@ -1,19 +1,34 @@
 #include "grid.h"
-#include <Eigen/Dense> // need to change this such that the path must not be given
+#include <Eigen/Dense>
 
 Grid::Grid() {}
 
-std::array<double, g_ndim> Grid::coords(const std::array<std::size_t, g_ndim>& vec, const std::array<std::vector<double>, g_ndim>& gridcoords) const
+Grid::Grid(Gridcoords gridcoords)
+: gridcoords(gridcoords)
+{}
+
+Coordvec Grid::coordvec(const Idvec& idvec) const
 {
-    std::array<double, g_ndim> coords;
+    Coordvec coordvec;
     for(std::size_t dim = 0; dim < std::size(gridcoords); dim++)
     {
-        coords[dim] = gridcoords[dim][vec[dim]];
+        coordvec[dim] = gridcoords[dim][idvec[dim]];
     }
-    return coords;
+    return coordvec;
 }
 
-std::array<std::vector<double>,g_ndim> Grid::getGridcoords() const
+Idvec Grid::idvec(Id id) const
+{
+    std::size_t lenx(gridcoords[1].size());
+    std::size_t leny(gridcoords[2].size());
+    Id idz(floor(id/(lenx*leny)));
+    Id idy(floor((id-idz*lenx*leny)/lenx));
+    Id idx(id-idy*lenx-idz*lenx*leny);
+    Idvec idvec({idx,idy,idz});
+    return idvec;
+}
+
+Gridcoords Grid::getGridcoords() const
 {
     return gridcoords;
 }
