@@ -41,7 +41,7 @@ public:
     // Convert indices along the corresponding different dimensions to the absolute coordinates
     Coordvec coordvec(const Idvec& vec) const;
 
-    Gridcoords getGridcoords() const;
+    const Gridcoords& getGridcoords() const;
 
 private:
 

@@ -5,5 +5,6 @@
 
 // number of geometrical dimensions of the problem
 constexpr std::size_t g_ndim(3);
+constexpr std::size_t g_maxdim(3);
 
 #endif // GVAR_H

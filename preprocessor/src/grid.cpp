@@ -1,70 +1,116 @@
 #include "grid.h"
 #include <Eigen/Dense>
 #include <algorithm>
+#include "gvar.h"
 
 Grid::Grid() {}
 
 Grid::Grid(Gridcoords gridcoords)
-: gridcoords(gridcoords)
+    : gridcoords(std::move(gridcoords))  // move to avoid unnecessary copy
 {
-    for(std::size_t dim = 0; dim < gridcoords.size(); dim++)
+    for (auto& coords : this->gridcoords)
     {
-        if (!std::is_sorted(gridcoords[dim].cbegin(), gridcoords[dim].cend())) // if not sorted
+        if (!std::is_sorted(coords.begin(), coords.end()))
         {
-            std::sort(this->gridcoords[dim].begin(), this->gridcoords[dim].end()); // sorts coordinates of the grid along dimension dim
+            std::sort(coords.begin(), coords.end());
         }
     }
 }
 
-Id Grid::id(const Idvec& idvec) const
+Id Grid::id(const Idvec& idvec) const // to generalise to dim <= 3
 {
-    return idvec[2]*gridcoords[0].size()*gridcoords[1].size()
-           +idvec[1]*gridcoords[0].size()
-           +idvec[0];
+    const std::size_t size0 = gridcoords[0].size();
+    const std::size_t size1 = gridcoords[1].size();
+
+    const std::size_t stride2 = size0 * size1;  // stride for dim 2
+    const std::size_t stride1 = size0;          // stride for dim 1
+
+    return idvec[2] * stride2 + idvec[1] * stride1 + idvec[0];
 }
 
-Id Grid::id(const Coordvec& coordvec) const
+Id Grid::id(const Coordvec& coordvec) const //to be optimised cause coordvec returns something that could be "not stored"
 {
     return id(idvec(coordvec));
 }
 
 Idvec Grid::idvec(Id id) const
 {
-    std::size_t lenx(gridcoords[1].size());
-    std::size_t leny(gridcoords[2].size());
-    Id idz(floor(id/(lenx*leny)));
-    Id idy(floor((id-idz*lenx*leny)/lenx));
-    Id idx(id-idy*lenx-idz*lenx*leny);
-    Idvec idvec({idx,idy,idz});
-    return idvec;
+    std::array<std::size_t, g_maxdim> len{1,1,1};
+    for(std::size_t dim = 0; dim < gridcoords.size(); dim++)
+    {
+        len[dim] = gridcoords[dim].size();
+    }
+
+    const std::size_t lenxy = len[0] * len[1];
+
+    Id idz = id / lenxy;
+    Id rem = id % lenxy;  // remainder after extracting z
+
+    Id idy = rem / len[0];
+    Id idx = rem % len[0];
+
+    return Idvec{idx, idy, idz};
 }
+
+/* COULD BE GOOD, TO BE TESTED:
+ * Idvec Grid::idvec(Id id) const
+{
+    const std::size_t dims = gridcoords.size();
+    Idvec idvec(dims);
+    std::vector<std::size_t> strides(dims, 1);
+
+    // Compute strides (row-major order)
+    for (std::size_t i = 1; i < dims; ++i)
+        strides[i] = strides[i - 1] * gridcoords[i - 1].size();
+
+    // Decode the flat ID into multi-dimensional index
+    for (std::size_t dim = dims; dim-- > 0; )
+    {
+        idvec[dim] = id / strides[dim];
+        id %= strides[dim];
+    }
+
+    return idvec;
+}*/
 
 Idvec Grid::idvec(const Coordvec& coordvec) const
 {
-    for(std::size_t dim = 0; dim < gridcoords.size(); dim++)
+    Idvec idvec(gridcoords.size());
+
+    for (std::size_t dim = 0; dim < gridcoords.size(); ++dim)
     {
-        std::find(gridcoords[dim].begin(), gridcoords[dim].end(), coordvec[dim]);
+        const auto& gcAlongDim = gridcoords[dim];
+        auto it = std::lower_bound(gcAlongDim.begin(), gcAlongDim.end(), coordvec[dim]);
+
+        if (it == gcAlongDim.end() || *it != coordvec[dim]) {
+            throw std::runtime_error("Coordinate not found in sorted grid dimension " + std::to_string(dim)); // to change to a try catch when snap to grid will be implemented
+        }
+
+        idvec[dim] = std::distance(gcAlongDim.begin(), it);
     }
-    //std::find(gridcoords[dim].begin(), gridcoords[dim].end(), item);
-    // to be written
+
+    return idvec;
 }
 
-Coordvec Grid::coordvec(Id id) const
+Coordvec Grid::coordvec(Id id) const //to be optimised cause coordvec returns something that could be "not stored"
 {
     return coordvec(idvec(id));
 }
 
 Coordvec Grid::coordvec(const Idvec& idvec) const
 {
-    Coordvec coordvec;
-    for(std::size_t dim = 0; dim < std::size(gridcoords); dim++)
+    const std::size_t dims = gridcoords.size();
+    Coordvec coordvec(dims);  // Allocate with correct size
+
+    for (std::size_t dim = 0; dim < dims; ++dim)
     {
         coordvec[dim] = gridcoords[dim][idvec[dim]];
     }
+
     return coordvec;
 }
 
-Gridcoords Grid::getGridcoords() const
+const Gridcoords& Grid::getGridcoords() const
 {
     return gridcoords;
 }
