@@ -1,4 +1,7 @@
 #include "mainwindow.h"
+#include <vector>
+#include <iostream>
+#include "Grid.h"
 
 #include <QApplication>
 

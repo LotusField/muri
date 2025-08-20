@@ -443,3 +443,7 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# doxygen generated documentation
+latex/
+html/
