@@ -6,7 +6,7 @@ This readme file is missing a lot of important informations in order to fully un
 
 ## The program
 ### Goal
-This program is design for architects and engineers to simulate static 3D diffusion of heat and vapor in construction details. The results allows one to check for the safety of the construction detail with regard to condensation and mould growth.
+This program is design for architects and engineers to simulate static 3D diffusion of heat and vapor in construction details. The results allow one to check for the safety of the construction detail with regard to condensation and mould growth.
 
 ## The development project
 The project would have 4 main code directories:
