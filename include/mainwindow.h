@@ -17,7 +17,10 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void paintEvent(QPaintEvent *event);
+
 private:
     Ui::MainWindow *ui;
+    QPixmap background;
 };
 #endif // MAINWINDOW_H
