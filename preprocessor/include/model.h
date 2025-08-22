@@ -7,17 +7,20 @@ class Model
 {
 public:
 
-    Model();
-
     //! Model constructor
     /*!
-    Takes a ___ .
-        \param .
-        \param .
     */
+    Model();
 
+    //! Add a cube to the model
+    /*!
+     * \param cube cube to be added to the model
+    */
     void addCube(Cube cube);
 
+    //! Refresh the grid to integrate eventual changes in the model
+    /*!
+    */
     void refreshGrid();
 
 private:

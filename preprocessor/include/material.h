@@ -12,27 +12,65 @@ public:
 
     Material();
 
-    Material(string label, double lambda, double delta);
+    //! Material constructor
+    /*!
+    Takes information on the material properties useful for static hygrothermal diffusion.
+    This constructor assumes that the material is isotropic.
+        \param label name of the material/product.
+        \param lambda linear conducitivty in [W/m K].
+        \param delta linear vapour diffusion coefficient in [mg/h m Pa].
+    */
+    Material(std::string label, double lambda, double delta);
 
     //! Material constructor
     /*!
-    ___
-        \param ___
-        \param ___
+    Takes information on the material properties useful for static hygrothermal diffusion.
+        \param label name of the material/product.
+        \param lambda linear conducitivty in [W/m K].
+        \param lambdaSymmetry either ISOTROPIC, CARTESIAN, or CYLINDRICAL (enumy type Symmetry).
+        \param delta linear vapour diffusion coefficient in [mg/h m Pa].
+
     */
-    Material(string label, double lambda, double lambdaSymmetry, double delta, double deltaSymmetry);
+    Material(std::string label, double lambda, Symmetry lambdaSymmetry, double delta, Symmetry deltaSymmetry);
 
-    string getLabel() const;
+    //! label get method
+    /*!
+    Gets the label/name of the material.
+        \return label the label/name of the material.
+    */
+    std::string getLabel() const;
 
+    //! lambda get method
+    /*!
+    Gets the thermal conductivity coefficient of the material.
+        \return the thermal conductivity coefficient (lambda)
+    */
     double getLambda() const;
+
+    //! lambda symmetry get method
+    /*!
+    Gets the thermal diffusion symmetry of the medium.
+        \return the vapour diffusion symmetry of the medium.
+    */
     Symmetry getLambdaSymmetry() const;
 
+    //! delta get method
+    /*!
+    Gets the vapour diffusion coefficient of the material.
+        \return the vapour diffusion coefficient (delta)
+    */
     double getDelta() const;
+
+    //! delta symmetry get method
+    /*!
+    Gets the vapour diffusion symmetry of the medium.
+        \return the vapour diffusion symmetry of the medium.
+    */
     Symmetry getDeltaSymmetry() const;
 
 private:
 
-    string label;
+    std::string label;
 
     double lambda;
     Symmetry lambdaSymmetry;

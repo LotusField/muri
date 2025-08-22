@@ -449,3 +449,5 @@ FodyWeavers.xsd
 # doxygen generated documentation
 latex/
 html/
+*.user
+*.user

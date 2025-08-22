@@ -10,20 +10,23 @@ class MaterialLib
 {
 public:
 
-    MaterialLib();
-
-    Material();
-
     //! Material constructor
     /*!
-    ___
-        \param ___
-        \param ___
     */
+    MaterialLib();
 
-    std::sizte_t getLibrarySize() const;
+    //! size of the library get method
+    /*!
+        \return the size of the available material library.
+    */
+    std::size_t getLibrarySize() const;
 
-    std::sizte_t getMaterial(std::size_t index) const;
+    //! specific material in the library get method
+    /*!
+     *  \param the index of the material to get.
+        \return the material at the given index in the library.
+    */
+    std::size_t getMaterial(std::size_t index) const;
 
 private:
 
