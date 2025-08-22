@@ -4,7 +4,6 @@
 #include "gvar.h"
 #include "grid.h"
 #include <array>
-#include <vector>
 #include "material.h"
 
 using Coordrange = std::array<Coord,2>;
