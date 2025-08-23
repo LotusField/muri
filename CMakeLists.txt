@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.19)
 project(muri LANGUAGES CXX VERSION 0.0.1)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets OpenGLWidgets)
 
 include(FetchContent)
 
@@ -48,10 +48,14 @@ qt_add_executable(${PROJECT_NAME}
     include/mainwindow.h
     src/mainwindow.cpp
 
-    src/mainwindow.ui
+    gui/preprocessor/include/preprocessorwindow.h
+    gui/preprocessor/src/preprocessorwindow.cpp
+
 
     preprocessor/include/grid.h
     preprocessor/src/grid.cpp
+    src/mainwindow.ui
+
 )
 
 qt_add_executable(tests
@@ -64,20 +68,22 @@ qt_add_executable(tests
 target_include_directories(${PROJECT_NAME} PUBLIC
     include
     preprocessor/include
-    eigen-3.4.0
+    gui/preprocessor/include
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 target_include_directories(tests PUBLIC
     include
     preprocessor/include
-    eigen-3.4.0
 )
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE
         Qt::Core
         Qt::Widgets
-        Eigen3::Eigen#
+        Qt::OpenGLWidgets
+        Eigen3::Eigen
+
 )
 
 target_link_libraries(tests
