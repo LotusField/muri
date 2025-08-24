@@ -1,25 +1,26 @@
 #ifndef PREPROCESSORWINDOW_H
 #define PREPROCESSORWINDOW_H
 
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions>
+#include <QMainWindow>
 
-class PreprocessorWindow : public QOpenGLWidget, protected QOpenGLFunctions
+QT_BEGIN_NAMESPACE
+namespace Ui {
+class PreprocessorWindow;
+}
+QT_END_NAMESPACE
+
+class PreprocessorWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
 
-    PreprocessorWindow(QWidget *parent = nullptr);
-
-protected:
-    void initializeGL() override;
-    void resizeGL(int w, int h) override;
-    void paintGL() override;
+    explicit PreprocessorWindow(QWidget *parent = nullptr);
+    ~PreprocessorWindow();
 
 private:
 
-    void on_actionShowPreprocessor_triggered();
+    Ui::PreprocessorWindow *ui;
 };
 
 #endif // PREPROCESSORWINDOW_H

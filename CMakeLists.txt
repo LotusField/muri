@@ -48,14 +48,17 @@ qt_add_executable(${PROJECT_NAME}
     include/mainwindow.h
     src/mainwindow.cpp
 
+    preprocessor/include/grid.h
+    preprocessor/src/grid.cpp
+
     gui/preprocessor/include/preprocessorwindow.h
     gui/preprocessor/src/preprocessorwindow.cpp
 
+    gui/preprocessor/include/preprocessordrawingwidget.h
+    gui/preprocessor/src/preprocessordrawingwidget.cpp
 
-    preprocessor/include/grid.h
-    preprocessor/src/grid.cpp
     src/mainwindow.ui
-
+    gui/preprocessor/src/preprocessorwindow.ui
 )
 
 qt_add_executable(tests
