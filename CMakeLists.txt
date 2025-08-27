@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.19)
 project(muri LANGUAGES CXX VERSION 0.0.1)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets OpenGLWidgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets OpenGLWidgets Gui)
 
 include(FetchContent)
 
@@ -85,6 +85,7 @@ target_link_libraries(${PROJECT_NAME}
         Qt::Core
         Qt::Widgets
         Qt::OpenGLWidgets
+        Qt::Gui
         Eigen3::Eigen
 
 )
