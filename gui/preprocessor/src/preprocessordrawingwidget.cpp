@@ -22,7 +22,7 @@ Add drawTriangle()          |Encapsulate the drawing logic if you plan to reuse 
 //glVertexAttribPointer(1, 4, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), offsetof(Vertex, r));
 
 PreprocessorDrawingWidget::PreprocessorDrawingWidget(QWidget *parent)
-    : QOpenGLWidget(parent)
+    : QOpenGLWidget(parent), xRot(0), yRot(0), xPan(0), yPan(0), cameraDistance(5.0f), fieldOfView(45.0f), aspectRatio(1.0f)
 {}
 
 PreprocessorDrawingWidget::~PreprocessorDrawingWidget()
@@ -42,6 +42,7 @@ void PreprocessorDrawingWidget::initializeGL()
 
     initializeOpenGLFunctions();
     glClearColor(0.1f, 0.1f, 0.3f, 1.0f);
+    glEnable(GL_DEPTH_TEST);
 
     initShaders();
     initBuffers();
@@ -52,22 +53,36 @@ void PreprocessorDrawingWidget::initializeGL()
 void PreprocessorDrawingWidget::resizeGL(int w, int h)
 {
     glViewport(0, 0, w, h);
+    aspectRatio = float(w) / float(h);
+    projection.setToIdentity();
+    projection.perspective(fieldOfView, aspectRatio, 0.1f, 100.0f);
 }
 
 void PreprocessorDrawingWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // bind shaders
+
+    QMatrix4x4 modelView;
+    modelView.translate(xPan, yPan, -cameraDistance);
+    modelView.rotate(xRot, 1.0f, 0.0f, 0.0f);
+    modelView.rotate(yRot, 0.0f, 1.0f, 0.0f);
+
+    QMatrix4x4 mvp = projection * modelView;
+
     glUseProgram(shaderProgram);
+
+    // Pass the MVP matrix to shader
+    GLint mvpLoc = glGetUniformLocation(shaderProgram, "mvp");
+    if (mvpLoc == -1) {
+        qWarning("Vertex shader error: paintGL() could not find the mvp 4x4 QMatrix");
+    }
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, mvp.constData());
+
     glBindVertexArray(vao);
     glDrawArrays(GL_LINES, 0, numLineVertices);
     glBindVertexArray(0);
     glUseProgram(0);
-}
-
-void PreprocessorDrawingWidget::drawAxes()
-{
-
 }
 
 void PreprocessorDrawingWidget::initShaders()
@@ -77,10 +92,12 @@ void PreprocessorDrawingWidget::initShaders()
     layout(location = 0) in vec3 aPos;
     layout(location = 1) in vec4 aColor;
 
+    uniform mat4 mvp;
+
     out vec4 vertexColor;
 
     void main() {
-        gl_Position = vec4(aPos, 1.0);
+        gl_Position = mvp * vec4(aPos, 1.0);
         vertexColor = aColor;
     }
 )";
@@ -177,4 +194,62 @@ void PreprocessorDrawingWidget::initBuffers()
     glVertexAttribPointer(1, numColorParam, GL_UNSIGNED_BYTE, GL_TRUE, sizeof(Vertex), reinterpret_cast<void*>(offsetof(Vertex, r)));
 
     glBindVertexArray(0);
+}
+
+void PreprocessorDrawingWidget::mousePressEvent(QMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton) {
+        lastMousePosition = event->pos();
+    }
+}
+
+void PreprocessorDrawingWidget::mouseMoveEvent(QMouseEvent *event){
+
+    QPoint delta = event->pos() - lastMousePosition;
+
+    if (event->buttons() & Qt::LeftButton) {
+
+        float sensitivity = 0.5f;
+
+        // Update rotation angles
+        xRot += sensitivity * delta.y();
+        yRot += sensitivity * delta.x();
+
+        // Keep angles within 0-360
+        xRot = std::fmod(xRot, 360.0f);
+        yRot = std::fmod(yRot, 360.0f);
+    }
+    else if (event->buttons() & Qt::RightButton) {
+
+        float tanFov = std::tan(qDegreesToRadians(fieldOfView / 2.0f));
+        // Multiply by 2 to get full view height from half-angle tangent
+        float viewHeight = 2.0f * cameraDistance * tanFov;
+        float viewWidth = viewHeight * aspectRatio;
+
+        float dx = delta.x() * (viewWidth / float(width()));
+        float dy = delta.y() * (viewHeight / float(height()));
+
+        xPan += dx;
+        yPan -= dy;  // invert Y to match screen direction
+    }
+
+    lastMousePosition = event->pos();
+
+    update();  // Request repaint
+}
+
+void PreprocessorDrawingWidget::wheelEvent(QWheelEvent *event)
+{
+    // Zoom speed factor — tweak this for sensitivity
+    const float zoomSpeed = 0.5f;
+
+    // event->angleDelta().y() gives wheel delta in "eighths of a degree" units
+    // Positive means wheel scrolled up (zoom in), negative is down (zoom out)
+    float delta = event->angleDelta().y() / 120.0f;  // 120 is standard for one notch
+
+    // Update cameraDistance, but clamp it to avoid going too close or too far
+    cameraDistance -= delta * zoomSpeed;
+    cameraDistance = std::clamp(cameraDistance, 0.5f, 50.0f);
+
+    update();  // Request redraw
 }
