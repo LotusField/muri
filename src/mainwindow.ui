@@ -35,12 +35,48 @@
      <string>Options</string>
     </property>
    </widget>
+   <widget class="QMenu" name="menuPreprocessor">
+    <property name="title">
+     <string>Pre-processor</string>
+    </property>
+    <addaction name="actionShow"/>
+   </widget>
+   <widget class="QMenu" name="menuPost_processor">
+    <property name="title">
+     <string>Post-processor</string>
+    </property>
+    <addaction name="actionShow_3"/>
+   </widget>
+   <widget class="QMenu" name="menuSolver">
+    <property name="title">
+     <string>Solver</string>
+    </property>
+    <addaction name="actionShow_2"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuPreprocessor"/>
+   <addaction name="menuSolver"/>
+   <addaction name="menuPost_processor"/>
    <addaction name="menuOptions"/>
   </widget>
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionShow">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionShow_2">
+   <property name="text">
+    <string>Show</string>
+   </property>
+  </action>
+  <action name="actionShow_3">
+   <property name="text">
+    <string>Show</string>
    </property>
   </action>
  </widget>
