@@ -56,7 +56,7 @@ The project is compiled using CMake and the instructions contained in `CMakeList
 
 The main window should open and show a similar result to the figure below.
 
-![Main window screenshot](assets/mainwindow.png "Main window")
+![Main window screenshot](assets/mainwindow.PNG "Main window")
 
 You can change the run executable by
 1. Heading to "Projects" in the left-hand side vertical ribbon of Qt Creator.
