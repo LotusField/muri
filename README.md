@@ -63,16 +63,12 @@ You can change the run executable by
 2. In "Execute", setting "Execution configuration" to another executable, like a unit test file for instance.
 
 #### Using commands in the terminal
-_*MISSING PARAGRAPH*_
+It is not advised to to compile and run the project from the terminal because the process can be tedious and easily lead to errors.
 
 ### Compiling the documentation
-_*MISSING PARAGRAPH*_ To compile the documentation, open a terminal at the root of this repository and type
+To compile the documentation, open a terminal at the root of this repository and type
 ```
-empty
-```
-to compile
-```
-empty
+doxygen
 ```
 Head to the `html` folder at the root of this repository and open `index.html` file using a web browser for isntance. This will lead you to the main page of the documentation. You can then navigate through the different code elements of the project.
 
