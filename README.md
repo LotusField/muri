@@ -74,6 +74,7 @@ to compile
 ```
 empty
 ```
+Head to the `html` folder at the root of this repository and open `index.html` file using a web browser for isntance. This will lead you to the main page of the documentation. You can then navigate through the different code elements of the project.
 
 
 
