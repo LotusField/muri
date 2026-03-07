@@ -1,3 +1,4 @@
+#ifndef CATCH_CONFIG_MAIN
 #define CATCH_CONFIG_MAIN
 
 #include <catch2/catch_test_macros.hpp>
@@ -89,3 +90,5 @@ TEST_CASE( "Grid::coordvec(const Idvec& idvec)", "[Grid::coordvec]" ) {
         return grid.coordvec(iv19);
     };
 }
+
+#endif
